@@ -102,41 +102,55 @@ const Quiz = () => {
         {/* Show quiz only if not finished */}
         {!isQuizFinished && (
           <>
-            {/* Display Image instead of Text */}
-            <div className="flex justify-center item-center">
-              <img
-                src={currentQuestion.questionImage}
-                alt="Quiz Image"
-                className="w-80 h-72 object-cover mb-6"
-              />
-            </div>
+            {/* Main container for question and options */}
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-center mb-6 gap-6">
+              {/* Question Number and Image (Left on Desktop, Full Width on Mobile) */}
+              <div className="flex flex-col items-center md:items-start w-full md:w-1/2">
+                {/* Question Number */}
+                <div className="mb-4 text-center md:text-left">
+                  <p className="text-5xl font-bold text-yellow-400">
+                    Q. {currentQuestionIndex + 1}
+                  </p>
+                </div>
+                {/* Image */}
+                <div className="flex justify-center items-center w-full">
+                  <img
+                    src={currentQuestion.questionImage}
+                    alt="Quiz Image"
+                    className="w-64 h-64 md:w-100 md:h-100 object-cover"
+                  />
+                </div>
+              </div>
 
-            {/* Options */}
-            <div className="grid grid-cols-2 gap-6 mb-8">
-              {currentQuestion.options.map((option, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    handleAnswerSelection(option);
-                    setIsAnswered(true);
-                  }}
-                  className={`w-full py-4 px-6 text-lg font-bold rounded-lg transition-all duration-200 
-        border-2 border-yellow-400 
-        ${
-          isAnswered && option === selectedAnswer
-            ? option === currentQuestion.correctAnswer
-              ? "bg-green-600"
-              : "bg-red-600"
-            : "bg-blue-800 hover:bg-blue-700"
-        }`}
-                  disabled={isAnswered}
-                >
-                  <span className="mr-2">
-                    {String.fromCharCode(65 + index)}:
-                  </span>
-                  {option}
-                </button>
-              ))}
+              {/* Options (Right on Desktop, Full Width on Mobile, Vertically Centered on Desktop) */}
+              <div className="w-full md:w-1/2">
+                <div className="grid grid-cols-2 gap-6 mb-8">
+                  {currentQuestion.options.map((option, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        handleAnswerSelection(option);
+                        setIsAnswered(true);
+                      }}
+                      className={`w-full py-4 px-6 text-lg font-bold rounded-lg transition-all duration-200 
+                border-2 border-yellow-400 
+                ${
+                  isAnswered && option === selectedAnswer
+                    ? option === currentQuestion.correctAnswer
+                      ? "bg-green-600"
+                      : "bg-red-600"
+                    : "bg-blue-800 hover:bg-blue-700"
+                }`}
+                      disabled={isAnswered}
+                    >
+                      <span className="mr-2">
+                        {String.fromCharCode(65 + index)}:
+                      </span>
+                      {option}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </>
         )}
