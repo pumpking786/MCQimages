@@ -7,11 +7,11 @@ const Login = () => {
         <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
         <form>
           <div className="mb-4">
-            <label className="block mb-1 font-medium">Email</label>
+            <label className="block mb-1 font-medium">Username</label>
             <input
               type="email"
               className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="you@example.com"
+              placeholder="Your username"
             />
           </div>
           <div className="mb-6">

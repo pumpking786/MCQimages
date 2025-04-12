@@ -9,11 +9,27 @@ const Signup = () => {
         </h2>
         <form>
           <div className="mb-4">
-            <label className="block mb-1 font-medium">Email</label>
+            <label className="block mb-1 font-medium">Name</label>
             <input
-              type="email"
+              type="text"
               className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="you@example.com"
+              placeholder="Your full name"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-1 font-medium">Age</label>
+            <input
+              type="number"
+              className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="Your age"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-1 font-medium">Username</label>
+            <input
+              type="text"
+              className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="Choose a username"
             />
           </div>
           <div className="mb-4">
