@@ -21,6 +21,13 @@ router.post("/signup", async (req, res) => {
         .json({ message: "Age must be a valid positive number" });
     }
 
+    // Validate password length (at least 6 characters)
+    if (password.length < 6) {
+      return res
+        .status(400)
+        .json({ message: "Password must be at least 6 characters long" });
+    }
+
     if (password !== cpassword) {
       return res.status(400).json({ message: "Passwords do not match" });
     }

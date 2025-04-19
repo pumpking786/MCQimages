@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,8 @@ const Signup = () => {
   });
 
   const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,22 +21,30 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage(""); // clear previous message
+    setMessage("");
+    setMessageType("");
     try {
       const res = await axios.post(
         "http://localhost:8000/users/signup",
         formData
       );
-      setMessage(res.data.message); // success message
+      setMessage(res.data.message);
+      setMessageType("success");
       setFormData({
         name: "",
         age: "",
         username: "",
         password: "",
         cpassword: "",
-      }); // clear form
+      });
+
+      // Redirect to /login after a 2-second delay
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (err) {
       setMessage(err.response?.data?.message || "Something went wrong");
+      setMessageType("error");
     }
   };
 
@@ -107,7 +118,11 @@ const Signup = () => {
           </button>
         </form>
         {message && (
-          <p className="mt-4 text-center text-[18px] text-green-500 ">
+          <p
+            className={`mt-4 text-center text-[18px] ${
+              messageType === "success" ? "text-green-500" : "text-red-500"
+            }`}
+          >
             {message}
           </p>
         )}

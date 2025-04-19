@@ -79,10 +79,21 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+            className="w-full bg-blue-600 text-white cursor-pointer py-2 rounded-md hover:bg-blue-700 transition"
           >
             Login
           </button>
+          <div className="mt-4 flex justify-center items-center gap-2">
+            <span className="text-lm text-gray-600">Create an account</span>
+            <a href="/signup">
+              <button
+                type="button"
+                className="px-4 py-1 text-blue-600 text-lm font-medium hover:underline transition cursor-pointer"
+              >
+                Sign Up
+              </button>
+            </a>
+          </div>
         </form>
       </div>
     </div>
