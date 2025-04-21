@@ -43,9 +43,12 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
   return (
     <header className="bg-gradient-to-r from-blue-300 to-purple-300 text-white shadow-md">
       <div className="container mx-auto px-4 md:px-6 lg:px-10 py-3 md:py-4 lg:py-5 flex justify-between items-center">
-        <div className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-wide text-yellow-300">
+        <Link
+          to="/"
+          className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-wide text-yellow-300"
+        >
           MCQ
-        </div>
+        </Link>
         <nav>
           <ul className="flex space-x-4 md:space-x-6 lg:space-x-8 text-base md:text-lg lg:text-xl font-semibold">
             {isLoggedIn ? (
@@ -86,7 +89,7 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-blue-100 hover:text-blue-600 rounded-b-lg"
+                    className="w-full text-left px-4 py-2 cursor-pointer text-sm hover:bg-blue-100 hover:text-blue-600 rounded-b-lg"
                   >
                     Logout
                   </button>
