@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import axios from "axios"; // To make HTTP requests to the backend
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const Login = () => {
-  // State for form data
+const Login = ({ setIsLoggedIn }) => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
 
-  // State for error message
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
+  const navigate = useNavigate();
 
-  // Handle input change
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -19,33 +19,39 @@ const Login = () => {
     });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
+    setMessage("");
+    setMessageType("");
 
     const { username, password } = formData;
 
     if (!username || !password) {
-      return setError("Please fill in all fields.");
+      setMessage("Please fill in all fields.");
+      setMessageType("error");
+      return;
     }
 
     try {
-      // Make API request to backend for login
       const response = await axios.post("http://localhost:8000/users/login", {
         username,
         password,
       });
 
-      // Assuming the backend returns a token on successful login
       if (response.data.token) {
-        localStorage.setItem("token", response.data.token); // Store token in local storage
-        // Redirect or update state (you can use useNavigate or React Router for navigation)
-        alert("Login successful!");
+        localStorage.setItem("token", response.data.token);
+        setIsLoggedIn(true); // Update login state
+        setMessage("Login successful!");
+        setMessageType("success");
+
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
       }
     } catch (err) {
       console.error(err);
-      setError("Invalid username or password.");
+      setMessage("Invalid username or password.");
+      setMessageType("error");
     }
   };
 
@@ -53,7 +59,15 @@ const Login = () => {
     <div className="flex items-center justify-center min-h-[calc(100vh-88px)] bg-blue-300">
       <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-        {error && <div className="mb-4 text-red-500 text-center">{error}</div>}
+        {message && (
+          <div
+            className={`mb-4 text-center ${
+              messageType === "success" ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {message}
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block mb-1 font-medium">Username</label>
@@ -84,11 +98,11 @@ const Login = () => {
             Login
           </button>
           <div className="mt-4 flex justify-center items-center gap-2">
-            <span className="text-lm text-gray-600">Create an account</span>
+            <span className="text-sm text-gray-600">Create an account</span>
             <a href="/signup">
               <button
                 type="button"
-                className="px-4 py-1 text-blue-600 text-lm font-medium hover:underline transition cursor-pointer"
+                className="px-4 py-1 text-blue-600 text-sm font-medium hover:underline transition cursor-pointer"
               >
                 Sign Up
               </button>
