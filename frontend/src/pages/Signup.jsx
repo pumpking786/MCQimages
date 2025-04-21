@@ -49,7 +49,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-88px)] bg-green-300">
+    <div className="flex items-center justify-center flex-grow bg-green-300">
       <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center">
           Create an Account

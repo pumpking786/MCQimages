@@ -40,7 +40,7 @@ const Login = ({ setIsLoggedIn }) => {
 
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
-        setIsLoggedIn(true); // Update login state
+        setIsLoggedIn(true);
         setMessage("Login successful!");
         setMessageType("success");
 
@@ -56,7 +56,7 @@ const Login = ({ setIsLoggedIn }) => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-88px)] bg-blue-300">
+    <div className="flex items-center justify-center flex-grow bg-blue-300">
       <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
         {message && (

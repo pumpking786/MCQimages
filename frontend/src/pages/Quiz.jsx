@@ -1,34 +1,34 @@
 import React, { useState, useEffect } from "react";
-import QuizResultModal from "../components/QuizResultModal"; // Import the modal component
+import QuizResultModal from "../components/QuizResultModal";
 
 const questions = [
   {
     questionImage:
-      "https://hips.hearstapps.com/hmg-prod/images/william-shakespeare-194895-1-402.jpg", // Replace with actual image URL
+      "https://hips.hearstapps.com/hmg-prod/images/william-shakespeare-194895-1-402.jpg",
     options: ["Berlin", "Madrid", "Paris", "Rome"],
     correctAnswer: "Paris",
   },
   {
     questionImage:
-      "https://hips.hearstapps.com/hmg-prod/images/william-shakespeare-194895-1-402.jpg", // Replace with actual image URL
+      "https://hips.hearstapps.com/hmg-prod/images/william-shakespeare-194895-1-402.jpg",
     options: ["Earth", "Mars", "Venus", "Jupiter"],
     correctAnswer: "Mars",
   },
   {
     questionImage:
-      "https://hips.hearstapps.com/hmg-prod/images/william-shakespeare-194895-1-402.jpg", // Replace with actual image URL
+      "https://hips.hearstapps.com/hmg-prod/images/william-shakespeare-194895-1-402.jpg",
     options: ["3", "4", "5", "6"],
     correctAnswer: "4",
   },
   {
     questionImage:
-      "https://hips.hearstapps.com/hmg-prod/images/william-shakespeare-194895-1-402.jpg", // Replace with actual image URL
+      "https://hips.hearstapps.com/hmg-prod/images/william-shakespeare-194895-1-402.jpg",
     options: ["Atlantic", "Indian", "Arctic", "Pacific"],
     correctAnswer: "Pacific",
   },
   {
     questionImage:
-      "https://hips.hearstapps.com/hmg-prod/images/william-shakespeare-194895-1-402.jpg", // Replace with actual image URL
+      "https://hips.hearstapps.com/hmg-prod/images/william-shakespeare-194895-1-402.jpg",
     options: [
       "William Wordsworth",
       "William Shakespeare",
@@ -90,8 +90,8 @@ const Quiz = () => {
   const isQuizFinished = currentQuestionIndex >= shuffledQuestions.length;
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-88px)] bg-gradient-to-br from-blue-900 via-blue-800 to-black text-white">
-      <div className="bg-[#001f3f] p-8 rounded-none shadow-none w-full min-h-[calc(100vh-88px)] border-t-4 border-yellow-400">
+    <div className="flex justify-center flex-grow bg-gradient-to-br from-blue-900 via-blue-800 to-black text-white">
+      <div className="bg-[#001f3f] p-8 rounded-none shadow-none w-full">
         {/* Score Display */}
         <div className="mt-2 text-center text-lg">
           <p className="text-4xl font-bold text-yellow-400 mb-4">
@@ -117,14 +117,13 @@ const Quiz = () => {
                   <img
                     src={currentQuestion.questionImage}
                     alt="Quiz Image"
-                    className="w-64 h-64 md:w-100 md:h-100 object-cover"
+                    className="w-64 h-64 md:w-96 md:h-96 max-w-full object-cover"
                   />
                 </div>
               </div>
-
               {/* Options (Right on Desktop, Full Width on Mobile, Vertically Centered on Desktop) */}
               <div className="w-full md:w-1/2">
-                <div className="grid grid-cols-2 gap-6 mb-8">
+                <div className="grid grid-cols-2 gap-6 mb-6">
                   {currentQuestion.options.map((option, index) => (
                     <button
                       key={index}
@@ -133,14 +132,14 @@ const Quiz = () => {
                         setIsAnswered(true);
                       }}
                       className={`w-full py-4 px-6 text-lg font-bold rounded-lg transition-all duration-200 
-                border-2 border-yellow-400 
-                ${
-                  isAnswered && option === selectedAnswer
-                    ? option === currentQuestion.correctAnswer
-                      ? "bg-green-600"
-                      : "bg-red-600"
-                    : "bg-blue-800 hover:bg-blue-700"
-                }`}
+          border-2 border-yellow-400 
+          ${
+            isAnswered && option === selectedAnswer
+              ? option === currentQuestion.correctAnswer
+                ? "bg-green-600"
+                : "bg-red-600"
+              : "bg-blue-800 hover:bg-blue-700"
+          }`}
                       disabled={isAnswered}
                     >
                       <span className="mr-2">
@@ -150,37 +149,37 @@ const Quiz = () => {
                     </button>
                   ))}
                 </div>
+
+                {/* Feedback */}
+                {isAnswered && (
+                  <div className="mb-4 text-center text-xl font-medium">
+                    {selectedAnswer === currentQuestion.correctAnswer ? (
+                      <p className="text-green-400">Correct!</p>
+                    ) : (
+                      <p className="text-red-400">
+                        Wrong! Correct Answer:{" "}
+                        <span className="font-bold text-yellow-300">
+                          {currentQuestion.correctAnswer}
+                        </span>
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* Show Next Question button only after an answer is selected */}
+                {isAnswered && (
+                  <button
+                    onClick={handleNextQuestion}
+                    className="w-full bg-yellow-500 text-black py-3 rounded-lg font-semibold hover:bg-yellow-400 transition"
+                  >
+                    {currentQuestionIndex === shuffledQuestions.length - 1
+                      ? "Finish Quiz"
+                      : "Next Question"}
+                  </button>
+                )}
               </div>
             </div>
           </>
-        )}
-
-        {/* Feedback */}
-        {isAnswered && (
-          <div className="mb-6 text-center text-xl font-medium">
-            {selectedAnswer === currentQuestion.correctAnswer ? (
-              <p className="text-green-400">Correct!</p>
-            ) : (
-              <p className="text-red-400">
-                Wrong! Correct Answer:{" "}
-                <span className="font-bold text-yellow-300">
-                  {currentQuestion.correctAnswer}
-                </span>
-              </p>
-            )}
-          </div>
-        )}
-
-        {/* Show Next Question button only after an answer is selected */}
-        {isAnswered && (
-          <button
-            onClick={handleNextQuestion}
-            className="w-full bg-yellow-500 text-black py-3 rounded-lg font-semibold hover:bg-yellow-400 transition mt-4"
-          >
-            {currentQuestionIndex === shuffledQuestions.length - 1
-              ? "Finish Quiz"
-              : "Next Question"}
-          </button>
         )}
 
         {isQuizFinished && (
