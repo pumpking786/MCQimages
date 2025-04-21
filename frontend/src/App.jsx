@@ -44,6 +44,7 @@ function App() {
           path="/signup"
           element={isLoggedIn ? <Navigate to="/" replace /> : <Signup />}
         />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>
   );
