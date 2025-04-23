@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header";
 import Quiz from "./pages/Quiz";
@@ -6,21 +7,32 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
 
+  // Check if the session is still valid when app loads
   useEffect(() => {
-    const handleStorageChange = () => {
-      setIsLoggedIn(!!localStorage.getItem("token"));
+    const checkSession = async () => {
+      try {
+        const res = await axios.get("http://localhost:8000/users/check-session", {
+          withCredentials: true,
+        });
+        setIsLoggedIn(res.data.loggedIn);
+      } catch (error) {
+        console.error("Session check failed:", error);
+        setIsLoggedIn(false);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    window.addEventListener("storage", handleStorageChange);
-    handleStorageChange();
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
+    checkSession();
   }, []);
+
+  // Show loading state while checking session
+  if (loading) {
+    return <div className="text-center mt-10">Loading...</div>;
+  }
 
   return (
     <>
