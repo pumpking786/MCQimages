@@ -91,6 +91,15 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.get("/check-session", (req, res) => {
+  if (req.session && req.session.token) {
+    return res.status(200).json({ loggedIn: true });
+  } else {
+    return res.status(200).json({ loggedIn: false });
+  }
+});
+
+
 router.post("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) return res.status(500).json({ message: "Logout failed" });
