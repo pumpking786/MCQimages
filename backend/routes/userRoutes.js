@@ -99,6 +99,30 @@ router.get("/check-session", (req, res) => {
   }
 });
 
+// Fetch user details route
+router.get("/user-details", async (req, res) => {
+  try {
+    if (!req.session || !req.session.token) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const decoded = jwt.verify(req.session.token, SECRET_KEY);
+    const user = await User.findOne({ 
+      where: { id: decoded.id }, 
+      attributes: ['name', 'age', 'username'] // Only fetching name, age, and username
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    console.error("Error fetching user details:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 
 router.post("/logout", (req, res) => {
   req.session.destroy((err) => {
