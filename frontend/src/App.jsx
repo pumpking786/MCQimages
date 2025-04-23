@@ -5,6 +5,7 @@ import Header from "./components/Header";
 import Quiz from "./pages/Quiz";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import UserDetail from "./pages/UserDetail";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -41,6 +42,10 @@ function App() {
         <Route
           path="/"
           element={isLoggedIn ? <Quiz /> : <Navigate to="/login" replace />}
+        />
+        <Route
+          path="/profile"
+          element={isLoggedIn ? <UserDetail /> : <Navigate to="/login" replace />}
         />
         <Route
           path="/login"
