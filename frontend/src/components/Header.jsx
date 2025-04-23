@@ -11,7 +11,7 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/users/session", {
+        const res = await axios.get("http://localhost:8000/users/check-session", {
           withCredentials: true,
         });
         if (res.data.loggedIn) {
