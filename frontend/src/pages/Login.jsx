@@ -1,22 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = ({ setIsLoggedIn }) => {
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-  });
-
+  const [formData, setFormData] = useState({ username: "", password: "" });
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -25,7 +18,6 @@ const Login = ({ setIsLoggedIn }) => {
     setMessageType("");
 
     const { username, password } = formData;
-
     if (!username || !password) {
       setMessage("Please fill in all fields.");
       setMessageType("error");
@@ -33,21 +25,17 @@ const Login = ({ setIsLoggedIn }) => {
     }
 
     try {
-      const response = await axios.post("http://localhost:8000/users/login", {
-        username,
-        password,
-      });
+      await axios.post(
+        "http://localhost:8000/users/login",
+        { username, password },
+        { withCredentials: true }
+      );
 
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
-        setIsLoggedIn(true);
-        setMessage("Login successful!");
-        setMessageType("success");
+      setIsLoggedIn(true);
+      setMessage("Login successful!");
+      setMessageType("success");
 
-        setTimeout(() => {
-          navigate("/");
-        }, 2000);
-      }
+      setTimeout(() => navigate("/"), 1000);
     } catch (err) {
       console.error(err);
       setMessage("Invalid username or password.");
