@@ -1,19 +1,45 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 
 const Header = ({ isLoggedIn, setIsLoggedIn }) => {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-    navigate("/login");
-    setIsDropdownOpen(false); // Close dropdown on logout
+  // ✅ Check login status from session on mount
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const res = await axios.get("http://localhost:8000/users/session", {
+          withCredentials: true,
+        });
+        if (res.data.loggedIn) {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
+      } catch (err) {
+        console.error("Session check failed:", err);
+        setIsLoggedIn(false);
+      }
+    };
+    checkSession();
+  }, [setIsLoggedIn]);
+
+  // ✅ Logout via session
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:8000/users/logout", {}, { withCredentials: true });
+      setIsLoggedIn(false);
+      navigate("/login");
+      setIsDropdownOpen(false);
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
   };
 
-  // Close dropdown when clicking outside
+  // Dropdown logic
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -27,12 +53,10 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
     };
   }, []);
 
-  // Toggle dropdown on click
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
-  // Handle keyboard accessibility (Enter or Space to toggle)
   const handleKeyDown = (e) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
