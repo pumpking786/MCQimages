@@ -11,30 +11,38 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Check if the session is still valid when app loads
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const res = await axios.get("http://localhost:8000/users/check-session", {
-          withCredentials: true,
-        });
-        setIsLoggedIn(res.data.loggedIn);
-      } catch (error) {
-        console.error("Session check failed:", error);
-        setIsLoggedIn(false);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Function to check session status
+  const checkSession = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/users/check-session", {
+        withCredentials: true,
+      });
+      setIsLoggedIn(res.data.loggedIn);
+    } catch (error) {
+      console.error("Session check failed:", error);
+      setIsLoggedIn(false);
+    }
+  };
 
-    checkSession();
+  // Initial session check on app load
+  useEffect(() => {
+    checkSession().finally(() => setLoading(false));
   }, []);
+
+  // Periodically check the session every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      checkSession();
+    }, 30 * 1000); // Check every 30 seconds
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(interval);
+  }, []); // Run only once on mount
 
   // Show loading state while checking session
   if (loading) {
     return <div className="text-center mt-10">Loading...</div>;
   }
-
   return (
     <>
       <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
@@ -45,7 +53,9 @@ function App() {
         />
         <Route
           path="/profile"
-          element={isLoggedIn ? <UserDetail /> : <Navigate to="/login" replace />}
+          element={
+            isLoggedIn ? <UserDetail /> : <Navigate to="/login" replace />
+          }
         />
         <Route
           path="/login"

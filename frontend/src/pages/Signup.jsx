@@ -41,7 +41,7 @@ const Signup = () => {
       // Redirect to /login after a 2-second delay
       setTimeout(() => {
         navigate("/login");
-      }, 2000);
+      }, 1000);
     } catch (err) {
       setMessage(err.response?.data?.message || "Something went wrong");
       setMessageType("error");
@@ -49,13 +49,11 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex items-center justify-center flex-grow bg-green-300">
-      <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          Create an Account
-        </h2>
+    <div className="flex items-center justify-center flex-grow bg-green-300 p-4">
+      <div className="bg-white p-6 rounded-xl shadow-md w-full max-w-sm">
+        <h2 className="text-xl font-bold mb-4 text-center">Create Account</h2>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
+          <div className="mb-3">
             <label className="block mb-1 font-medium">Name</label>
             <input
               type="text"
@@ -63,10 +61,10 @@ const Signup = () => {
               value={formData.name}
               onChange={handleChange}
               className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="Your full name"
+              placeholder="Full name"
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-3">
             <label className="block mb-1 font-medium">Age</label>
             <input
               type="number"
@@ -74,10 +72,10 @@ const Signup = () => {
               value={formData.age}
               onChange={handleChange}
               className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="Your age"
+              placeholder="Age"
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-3">
             <label className="block mb-1 font-medium">Username</label>
             <input
               type="text"
@@ -85,10 +83,10 @@ const Signup = () => {
               value={formData.username}
               onChange={handleChange}
               className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="Choose a username"
+              placeholder="Username"
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-3">
             <label className="block mb-1 font-medium">Password</label>
             <input
               type="password"
@@ -96,30 +94,41 @@ const Signup = () => {
               value={formData.password}
               onChange={handleChange}
               className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="Create password"
+              placeholder="Password"
             />
           </div>
-          <div className="mb-6">
-            <label className="block mb-1 font-medium">Confirm Password</label>
+          <div className="mb-4">
+            <label className="block mb-1 font-medium">Confirm</label>
             <input
               type="password"
               name="cpassword"
               value={formData.cpassword}
               onChange={handleChange}
               className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="Confirm password"
+              placeholder="Confirm"
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition"
+            className="w-full bg-green-600 text-white py-2 rounded-md cursor-pointer hover:bg-green-700 transition mb-4"
           >
             Sign Up
           </button>
         </form>
+        <div className="flex items-center justify-center text-sm space-x-1 mb-4">
+          <span>Already have an account?</span>
+          <button
+            onClick={() => {
+              /* navigate to login */
+            }}
+            className="text-green-600 hover:underline cursor-pointer"
+          >
+            Log In
+          </button>
+        </div>
         {message && (
           <p
-            className={`mt-4 text-center text-[18px] ${
+            className={`mt-3 text-center text-sm ${
               messageType === "success" ? "text-green-500" : "text-red-500"
             }`}
           >
@@ -130,6 +139,5 @@ const Signup = () => {
     </div>
   );
 };
-
 
 export default Signup;
