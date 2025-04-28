@@ -36,7 +36,7 @@ const QuizResultModal = ({ score, total, onRestart }) => {
           }}
           className="bg-blue-600 hover:bg-blue-500 text-white px-12 py-5 rounded-3xl font-semibold text-2xl shadow-xl transition-all transform hover:scale-110 duration-300"
         >
-          Play Again!
+          Submit
         </button>
       </div>
     </div>
