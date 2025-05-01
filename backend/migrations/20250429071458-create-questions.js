@@ -29,11 +29,11 @@ module.exports = {
       hint: {
         type: Sequelize.TEXT,
         allowNull: true,
-      }
+      },
     });
   },
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable("questions");
-  }
+  },
 };

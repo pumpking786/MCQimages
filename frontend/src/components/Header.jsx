@@ -11,9 +11,12 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/users/check-session", {
-          withCredentials: true,
-        });
+        const res = await axios.get(
+          "http://localhost:8000/users/check-session",
+          {
+            withCredentials: true,
+          }
+        );
         if (res.data.loggedIn) {
           setIsLoggedIn(true);
         } else {
@@ -30,7 +33,11 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
   // ✅ Logout via session
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:8000/users/logout", {}, { withCredentials: true });
+      await axios.post(
+        "http://localhost:8000/users/logout",
+        {},
+        { withCredentials: true }
+      );
       setIsLoggedIn(false);
       navigate("/login");
       setIsDropdownOpen(false);
@@ -104,6 +111,13 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
                       : "opacity-0 invisible -translate-y-2"
                   }`}
                 >
+                  <Link
+                    to="/"
+                    onClick={() => setIsDropdownOpen(false)}
+                    className="block px-4 py-2 text-sm hover:bg-blue-100 hover:text-blue-600 rounded-t-lg"
+                  >
+                    Play Quiz
+                  </Link>
                   <Link
                     to="/profile"
                     onClick={() => setIsDropdownOpen(false)}
