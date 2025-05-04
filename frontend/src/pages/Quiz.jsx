@@ -23,7 +23,7 @@ const Quiz = () => {
   const fetchQuestions = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:8000/admin/quiz-questions"); // Adjust the path if needed
+      const res = await axios.get("http://localhost:8000/admin/quiz-question"); // Adjust the path if needed
       const fetchedQuestions = shuffleArray(res.data).slice(0, 5);
       setQuestions(fetchedQuestions);
       setShuffledQuestions(fetchedQuestions);
