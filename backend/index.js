@@ -9,6 +9,7 @@ const userRoutes = require("./routes/userRoutes");
 const resultRoutes = require("./routes/resultRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const sessionMiddleware = require("./middleware/session");
+const errorHandler = require('./middleware/errorHandling');
 
 // ✅ Enable CORS with credentials
 app.use(cors({
@@ -26,6 +27,8 @@ app.use(sessionMiddleware());
 app.use("/users", userRoutes);
 app.use("/quizresult", resultRoutes);
 app.use("/admin", adminRoutes);
+
+app.use(errorHandler);
 
 // ✅ Start server
 const port = process.env.PORT || 8000;
