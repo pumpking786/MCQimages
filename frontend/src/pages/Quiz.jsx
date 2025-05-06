@@ -67,15 +67,18 @@ const Quiz = () => {
   const isQuizFinished = currentQuestionIndex >= shuffledQuestions.length;
   const currentQuestion = shuffledQuestions[currentQuestionIndex];
 
-  if (loading) return <div className="text-white text-center mt-10">Loading quiz...</div>;
-  if (error) return <div className="text-red-400 text-center mt-10">{error}</div>;
+  if (loading)
+    return <div className="text-white text-center mt-10">Loading quiz...</div>;
+  if (error)
+    return <div className="text-red-400 text-center mt-10">{error}</div>;
 
   return (
     <div className="flex justify-center flex-grow bg-gradient-to-br from-blue-900 via-blue-800 to-black text-white">
       <div className="bg-[#001f3f] p-8 rounded-none shadow-none w-full">
         <div className="mt-2 text-center text-lg">
           <p className="text-4xl font-bold text-yellow-400 mb-4">
-            Your Score: <span className="text-5xl text-green-500">{score}</span> / {shuffledQuestions.length}
+            Your Score: <span className="text-5xl text-green-500">{score}</span>{" "}
+            / {shuffledQuestions.length}
           </p>
         </div>
 
@@ -83,13 +86,15 @@ const Quiz = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-center mb-6 gap-6">
             <div className="flex flex-col items-center md:items-start w-full md:w-1/2">
               <div className="mb-4 text-center md:text-left">
-                <p className="text-5xl font-bold text-yellow-400">Q. {currentQuestionIndex + 1}</p>
+                <p className="text-5xl font-bold text-yellow-400">
+                  Q. {currentQuestionIndex + 1}
+                </p>
               </div>
               <div className="flex justify-center items-center w-full">
                 <img
                   src={currentQuestion.questionImage}
                   alt="Quiz"
-                  className="w-64 h-64 md:w-96 md:h-96 max-w-full object-cover"
+                  className="w-64 h-64 md:w-96 md:h-96 max-w-full object-contain"
                 />
               </div>
             </div>
@@ -116,7 +121,9 @@ const Quiz = () => {
                       }`}
                     disabled={isAnswered}
                   >
-                    <span className="mr-2">{String.fromCharCode(65 + index)}:</span>
+                    <span className="mr-2">
+                      {String.fromCharCode(65 + index)}:
+                    </span>
                     {option}
                   </button>
                 ))}
@@ -129,7 +136,9 @@ const Quiz = () => {
                   ) : (
                     <p className="text-red-400">
                       Wrong! Correct Answer:{" "}
-                      <span className="font-bold text-yellow-300">{currentQuestion.correctAnswer}</span>
+                      <span className="font-bold text-yellow-300">
+                        {currentQuestion.correctAnswer}
+                      </span>
                     </p>
                   )}
                   <p className="text-gray-400 mt-2">{currentQuestion.hint}</p>
