@@ -14,7 +14,7 @@ function App() {
   // Function to check session status
   const checkSession = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/users/check-session", {
+      const res = await axios.get("http://localhost:8000/auth/check-session", {
         withCredentials: true,
       });
       setIsLoggedIn(res.data.loggedIn);
