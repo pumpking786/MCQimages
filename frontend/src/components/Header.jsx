@@ -12,7 +12,7 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
     const checkSession = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8000/users/check-session",
+          "http://localhost:8000/auth/check-session",
           {
             withCredentials: true,
           }
@@ -34,7 +34,7 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        "http://localhost:8000/users/logout",
+        "http://localhost:8000/auth/logout",
         {},
         { withCredentials: true }
       );
