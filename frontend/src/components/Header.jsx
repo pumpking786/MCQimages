@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
-const Header = ({ isLoggedIn, setIsLoggedIn }) => {
+const Header = ({ isLoggedIn, setIsLoggedIn, isAdmin }) => {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -11,12 +11,9 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:8000/auth/check-session",
-          {
-            withCredentials: true,
-          }
-        );
+        const res = await axios.get("http://localhost:8000/auth/check-session", {
+          withCredentials: true,
+        });
         if (res.data.loggedIn) {
           setIsLoggedIn(true);
         } else {
@@ -33,11 +30,7 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
   // ✅ Logout via session
   const handleLogout = async () => {
     try {
-      await axios.post(
-        "http://localhost:8000/auth/logout",
-        {},
-        { withCredentials: true }
-      );
+      await axios.post("http://localhost:8000/auth/logout", {}, { withCredentials: true });
       setIsLoggedIn(false);
       navigate("/login");
       setIsDropdownOpen(false);
@@ -74,10 +67,7 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
   return (
     <header className="bg-gradient-to-r from-blue-300 to-purple-300 text-white shadow-md">
       <div className="container mx-auto px-4 md:px-6 lg:px-10 py-3 md:py-4 lg:py-5 flex justify-between items-center">
-        <Link
-          to="/"
-          className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-wide text-yellow-300"
-        >
+        <Link to="/" className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-wide text-yellow-300">
           MCQ
         </Link>
         <nav>
@@ -95,20 +85,14 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
                   className="inline-flex items-center justify-center px-3 py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
                 >
                   Profile
-                  <span
-                    className={`ml-2 inline-block transform transition-transform ${
-                      isDropdownOpen ? "rotate-180" : "rotate-0"
-                    }`}
-                  >
+                  <span className={`ml-2 inline-block transform transition-transform ${isDropdownOpen ? "rotate-180" : "rotate-0"}`}>
                     ▼
                   </span>
                 </div>
                 {/* Dropdown Menu */}
                 <div
                   className={`absolute top-full right-0 mt-2 w-40 bg-white text-gray-800 rounded-lg shadow-lg transition-all duration-200 transform z-10 ${
-                    isDropdownOpen
-                      ? "opacity-100 visible translate-y-0"
-                      : "opacity-0 invisible -translate-y-2"
+                    isDropdownOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2"
                   }`}
                 >
                   <Link
@@ -125,6 +109,27 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
                   >
                     View Details
                   </Link>
+
+                  {/* Admin Links */}
+                  {isAdmin && (
+                    <>
+                      <Link
+                        to="/manage-questions"
+                        onClick={() => setIsDropdownOpen(false)}
+                        className="block px-4 py-2 text-sm hover:bg-blue-100 hover:text-blue-600"
+                      >
+                        Manage Questions
+                      </Link>
+                      <Link
+                        to="/quiz-results-admin"
+                        onClick={() => setIsDropdownOpen(false)}
+                        className="block px-4 py-2 text-sm hover:bg-blue-100 hover:text-blue-600"
+                      >
+                        Quiz Results
+                      </Link>
+                    </>
+                  )}
+
                   <button
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 cursor-pointer text-sm hover:bg-blue-100 hover:text-blue-600 rounded-b-lg"
