@@ -8,98 +8,98 @@ const { User } = require("../models");
 
 // POST /admin/add-question
 router.post("/add-question", authenticateJWT, isAdmin, async (req, res) => {
-    const { questionImage, question, options, correctAnswer, hint } = req.body;
+  const { questionImage, question, options, correctAnswer, hint } = req.body;
 
-    // Basic validations
-    if (!question || !Array.isArray(options) || options.length < 2 || !correctAnswer) {
-      return res.status(400).json({ message: "Invalid question format" });
-    }
+  // Basic validations
+  if (!question || !Array.isArray(options) || options.length < 2 || !correctAnswer) {
+    return res.status(400).json({ message: "Invalid question format" });
+  }
 
-    if (!options.includes(correctAnswer)) {
-      return res.status(400).json({ message: "Correct answer must be one of the options" });
-    }
+  if (!options.includes(correctAnswer)) {
+    return res.status(400).json({ message: "Correct answer must be one of the options" });
+  }
 
-    // Create question in DB
-    const newQuestion = await Question.create({
-      questionImage,
-      question,
-      options,
-      correctAnswer,
-      hint,
-    });
+  // If questionImage is empty or not provided, set the default image
+  const defaultImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJdeTnZsjXpwZL9NNELSkDEv9mEpnxWbThXS_N21pOeAEfymWC2FZBidBOp1AawK2ZBUk&usqp=CAU";
+  const imageToUse = questionImage && questionImage.trim() !== "" ? questionImage : defaultImage;
 
-    res.status(201).json({ message: "Question added successfully", question: newQuestion });
-  
+  // Create question in DB
+  const newQuestion = await Question.create({
+    questionImage: imageToUse,
+    question,
+    options,
+    correctAnswer,
+    hint,
+  });
+
+  res.status(201).json({ message: "Question added successfully", question: newQuestion });
 });
 
 router.put("/quiz-question/:id", authenticateJWT, isAdmin, async (req, res) => {
- 
-    const questionId = req.params.id;
-    const { questionImage, question, options, correctAnswer, hint } = req.body;
+  const questionId = req.params.id;
+  const { questionImage, question, options, correctAnswer, hint } = req.body;
 
-    // Check if at least one field is present
-    if (
-      questionImage === undefined &&
-      question === undefined &&
-      options === undefined &&
-      correctAnswer === undefined &&
-      hint === undefined
-    ) {
-      return res.status(400).json({ message: "At least one field is required to update" });
+  // Check if at least one field is present
+  if (
+    questionImage === undefined &&
+    question === undefined &&
+    options === undefined &&
+    correctAnswer === undefined &&
+    hint === undefined
+  ) {
+    return res.status(400).json({ message: "At least one field is required to update" });
+  }
+
+  // Find the question
+  const existingQuestion = await Question.findByPk(questionId);
+  if (!existingQuestion) {
+    return res.status(404).json({ message: "Question not found" });
+  }
+
+  // If questionImage is empty or not provided, set the default image
+  const defaultImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJdeTnZsjXpwZL9NNELSkDEv9mEpnxWbThXS_N21pOeAEfymWC2FZBidBOp1AawK2ZBUk&usqp=CAU";
+  if (questionImage === undefined || questionImage.trim() === "") {
+    existingQuestion.questionImage = defaultImage;
+  } else {
+    existingQuestion.questionImage = questionImage.trim();
+  }
+
+  // Validate and update fields if provided
+  if (question !== undefined) {
+    if (question.trim() === "") {
+      return res.status(400).json({ message: "Question text cannot be empty" });
     }
+    existingQuestion.question = question;
+  }
 
-    // Find the question
-    const existingQuestion = await Question.findByPk(questionId);
-    if (!existingQuestion) {
-      return res.status(404).json({ message: "Question not found" });
+  if (options !== undefined) {
+    if (!Array.isArray(options) || options.length < 2) {
+      return res.status(400).json({ message: "Options must be an array with at least 2 items" });
     }
+    existingQuestion.options = options;
 
-    // Validate and update fields if provided
-    if (question !== undefined) {
-      if (question.trim() === "") {
-        return res.status(400).json({ message: "Question text cannot be empty" });
-      }
-      existingQuestion.question = question;
+    // If correctAnswer is also present, validate it against new options
+    if (correctAnswer !== undefined && !options.includes(correctAnswer)) {
+      return res.status(400).json({ message: "Correct answer must be one of the updated options" });
     }
+  }
 
-    if (options !== undefined) {
-      if (!Array.isArray(options) || options.length < 2) {
-        return res.status(400).json({ message: "Options must be an array with at least 2 items" });
-      }
-      existingQuestion.options = options;
-
-      // If correctAnswer is also present, validate it against new options
-      if (correctAnswer !== undefined && !options.includes(correctAnswer)) {
-        return res.status(400).json({ message: "Correct answer must be one of the updated options" });
-      }
+  if (correctAnswer !== undefined) {
+    // If options are not updated but correctAnswer is, validate against current options
+    const validOptions = options || existingQuestion.options;
+    if (!validOptions.includes(correctAnswer)) {
+      return res.status(400).json({ message: "Correct answer must be one of the options" });
     }
+    existingQuestion.correctAnswer = correctAnswer;
+  }
 
-    if (correctAnswer !== undefined) {
-      // If options are not updated but correctAnswer is, validate against current options
-      const validOptions = options || existingQuestion.options;
-      if (!validOptions.includes(correctAnswer)) {
-        return res.status(400).json({ message: "Correct answer must be one of the options" });
-      }
-      existingQuestion.correctAnswer = correctAnswer;
-    }
+  if (hint !== undefined) {
+    existingQuestion.hint = hint.trim(); // even if empty, accept it
+  }
 
-    if (questionImage !== undefined) {
-      if (questionImage.trim() === "") {
-        return res.status(400).json({ message: "Question Image text cannot be empty" });
-      }
-      existingQuestion.questionImage = questionImage;
-    }
+  await existingQuestion.save();
 
-    if (hint !== undefined) {
-      if (hint.trim() === "") {
-        return res.status(400).json({ message: "Hint cannot be empty" });
-      }
-      existingQuestion.hint = hint;
-    }
-
-    await existingQuestion.save();
-
-    res.status(200).json({ message: "Question updated successfully", question: existingQuestion });
+  res.status(200).json({ message: "Question updated successfully", question: existingQuestion });
 });
 
 router.delete("/quiz-question/:id", authenticateJWT, isAdmin, async (req, res) => {
@@ -129,7 +129,7 @@ router.get("/quiz-question", authenticateJWT, async (req, res) => {
 
 router.get("/quizresults", authenticateJWT, isAdmin, async (req, res) => {
      // Get the page and limit from the query parameters, with defaults if not provided
-     const limit = parseInt(req.query.limit) || 4; // Default to 4 if no limit is provided
+     const limit = parseInt(req.query.limit) || 10; // Default to 4 if no limit is provided
      const page = parseInt(req.query.page) || 1;   // Default to 1 if no page is provided
      const offset = (page - 1) * limit;            // Calculate the offset based on page
  
