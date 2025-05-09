@@ -1,19 +1,19 @@
-const express=require("express")
-const router=express.Router();
-const authenticateJWT=require("../middleware/jwtauthentication")
-const {QuizResult}=require("../models")
+const express = require("express");
+const router = express.Router();
+const authenticateJWT = require("../middleware/jwtauthentication");
+const { QuizResult } = require("../models");
 
-router.post("/",authenticateJWT, async (req,res)=>{
-        const {score,total}=req.body;
-        await QuizResult.create({score,total,userId:req.user.id})
-        res.json({
-            message: "Score recorded successfully",
-            addedItem: {score,total},
-          });
-})
+router.post("/", authenticateJWT, async (req, res) => {
+  const { score, total } = req.body;
+  await QuizResult.create({ score, total, userId: req.user.id });
+  res.json({
+    message: "Score recorded successfully",
+    addedItem: { score, total },
+  });
+});
 
 router.get("/", authenticateJWT, async (req, res) => {
-  const limit = parseInt(req.query.limit) || 2;
+  const limit = parseInt(req.query.limit) || 5;
   const page = parseInt(req.query.page) || 1;
   const offset = (page - 1) * limit;
 
@@ -48,5 +48,5 @@ router.get("/", authenticateJWT, async (req, res) => {
     },
   });
 });
-  
+
 module.exports = router;
