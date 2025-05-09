@@ -5,12 +5,15 @@ const QuizResultsAdmin = () => {
   const [results, setResults] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
+  const pageSize = 10;
   const fetchResults = async (pageNum) => {
     try {
-      const res = await axios.get(`http://localhost:8000/admin/quizresults?page=${pageNum}`, {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        `http://localhost:8000/admin/quizresults?page=${pageNum}`,
+        {
+          withCredentials: true,
+        }
+      );
       setResults(res.data.results);
       setTotalPages(res.data.totalPages);
       setPage(res.data.currentPage);
@@ -29,6 +32,7 @@ const QuizResultsAdmin = () => {
       <table className="w-full border table-auto">
         <thead>
           <tr className="bg-gray-100">
+            <th className="border px-4 py-2">SN</th>
             <th className="border px-4 py-2">Name</th>
             <th className="border px-4 py-2">Score</th>
             <th className="border px-4 py-2">Total</th>
@@ -36,8 +40,11 @@ const QuizResultsAdmin = () => {
           </tr>
         </thead>
         <tbody>
-          {results.map((r) => (
+          {results.map((r, index) => (
             <tr key={r.id}>
+              <td className="border px-4 py-2">
+                {(page - 1) * pageSize + index + 1}
+              </td>
               <td className="border px-4 py-2">{r.name || "Unknown"}</td>
               <td className="border px-4 py-2">{r.score}</td>
               <td className="border px-4 py-2">{r.total}</td>
