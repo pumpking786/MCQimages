@@ -109,6 +109,7 @@ const Header = ({ isLoggedIn, setIsLoggedIn, isAdmin }) => {
                   >
                     View Details
                   </Link>
+                  
 
                   {/* Admin Links */}
                   {isAdmin && (
@@ -127,9 +128,16 @@ const Header = ({ isLoggedIn, setIsLoggedIn, isAdmin }) => {
                       >
                         Quiz Results
                       </Link>
+                      
                     </>
                   )}
-
+                  <Link
+                    to="/change-password"
+                    onClick={() => setIsDropdownOpen(false)}
+                    className="block px-4 py-2 text-sm hover:bg-blue-100 hover:text-blue-600 rounded-t-lg"
+                  >
+                    Change Password
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 cursor-pointer text-sm hover:bg-blue-100 hover:text-blue-600 rounded-b-lg"
