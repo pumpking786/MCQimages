@@ -8,6 +8,7 @@ import Signup from "./pages/Signup";
 import UserDetail from "./pages/UserDetail";
 import ManageQuestions from "./pages/admin/ManageQuestions";
 import QuizResultsAdmin from "./pages/admin/QuizResultsAdmin";
+import ChangePassword from "./pages/ChangePassword";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -70,6 +71,10 @@ function App() {
         <Route
           path="/profile"
           element={isLoggedIn ? <UserDetail /> : <Navigate to="/login" replace />}
+        />
+        <Route
+          path="/change-password"
+          element={isLoggedIn ? <ChangePassword /> : <Navigate to="/login" replace />}
         />
         <Route
   path="/login"
