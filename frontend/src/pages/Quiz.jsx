@@ -94,7 +94,7 @@ const Quiz = () => {
                 <img
                   src={currentQuestion.questionImage}
                   alt="Quiz"
-                  className="w-64 h-64 md:w-96 md:h-96 max-w-full object-contain"
+                  className="max-h-96 w-full object-contain"
                 />
               </div>
             </div>

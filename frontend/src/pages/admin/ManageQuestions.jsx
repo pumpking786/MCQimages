@@ -168,7 +168,7 @@ const ManageQuestions = () => {
                     <img
                       src={editedData.questionImage}
                       alt="Preview"
-                      className="w-32 h-32 object-cover mb-2"
+                      className="h-40 w-auto max-h-40 object-contain mb-2"
                     />
                   )}
                   <input
@@ -251,7 +251,7 @@ const ManageQuestions = () => {
                     <img
                       src={q.questionImage}
                       alt="Question"
-                      className="w-32 h-32 object-cover mb-2 rounded"
+                      className="h-40 w-auto max-h-40 object-contain mb-2 rounded"
                     />
                   )}
 
