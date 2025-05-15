@@ -4,7 +4,7 @@ const session = require("express-session");
 // Middleware to configure session
 const sessionMiddleware = () => {
   return session({
-    secret: "your-session-secret", // Secret for signing session IDs
+    secret: process.env.SECRET_SESSION , // Secret for signing session IDs
     resave: false, // Don't resave session if it hasn't changed
     saveUninitialized: false, // Save uninitialized sessions
     cookie: {
