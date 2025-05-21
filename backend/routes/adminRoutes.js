@@ -10,5 +10,6 @@ router.put("/quiz-question/:id", authenticateJWT, isAdmin, AdminController.updat
 router.delete("/quiz-question/:id", authenticateJWT, isAdmin, AdminController.deleteQuestion);
 router.get("/quiz-question", authenticateJWT, AdminController.getAllQuestions);
 router.get("/quizresults", authenticateJWT, isAdmin, AdminController.getAllQuizResults);
+router.get("/getallusers", authenticateJWT, isAdmin, AdminController.getAllUsers);
 
 module.exports = router;
