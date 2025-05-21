@@ -137,3 +137,11 @@ exports.getAllQuizResults = async (req, res) => {
     results: formattedResults,
   });
 };
+
+exports.getAllUsers = async (req, res) => {
+   const user = await User.findAll({
+    attributes: ["id","name", "age", "username", "role"],
+  });
+  if (!user) return res.status(404).json({ message: "No User Found" });
+   res.status(200).json(user);
+};
