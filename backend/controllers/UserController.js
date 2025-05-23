@@ -86,10 +86,19 @@ exports.changePassword = async (req, res) => {
       .status(400)
       .json({ message: "New password and confirmation do not match" });
   }
+  if (oldPassword === newPassword) {
+    return res
+      .status(400)
+      .json({ message: "old password and new password cannot be same." });
+  }
 
   const user = await User.findByPk(req.user.id);
   if (!user) return res.status(404).json({ message: "User not found" });
-
+if (newPassword === user.username) {
+    return res
+      .status(400)
+      .json({ message: "New password cannot be the same as the username" });
+  }
   const isMatch = await bcrypt.compare(oldPassword, user.password);
   if (!isMatch) {
     return res.status(401).json({ message: "Old password is incorrect" });
