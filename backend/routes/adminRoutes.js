@@ -5,11 +5,42 @@ const authenticateJWT = require("../middleware/jwtauthentication");
 const isAdmin = require("../middleware/isAdmin");
 const AdminController = require("../controllers/AdminController");
 
-router.post("/add-question", authenticateJWT, isAdmin, AdminController.addQuestion);
-router.put("/quiz-question/:id", authenticateJWT, isAdmin, AdminController.updateQuestion);
-router.delete("/quiz-question/:id", authenticateJWT, isAdmin, AdminController.deleteQuestion);
+router.post(
+  "/add-question",
+  authenticateJWT,
+  isAdmin,
+  AdminController.addQuestion
+);
+router.put(
+  "/quiz-question/:id",
+  authenticateJWT,
+  isAdmin,
+  AdminController.updateQuestion
+);
+router.delete(
+  "/quiz-question/:id",
+  authenticateJWT,
+  isAdmin,
+  AdminController.deleteQuestion
+);
 router.get("/quiz-question", authenticateJWT, AdminController.getAllQuestions);
-router.get("/quizresults", authenticateJWT, isAdmin, AdminController.getAllQuizResults);
-router.get("/getallusers", authenticateJWT, isAdmin, AdminController.getAllUsers);
+router.get(
+  "/quizresults",
+  authenticateJWT,
+  isAdmin,
+  AdminController.getAllQuizResults
+);
+router.get(
+  "/getallusers",
+  authenticateJWT,
+  isAdmin,
+  AdminController.getAllUsers
+);
+router.post(
+  "/reset-user-password",
+  authenticateJWT,
+  isAdmin,
+  AdminController.resetUserPassword
+);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 // controllers/AdminController.js
 const { Question, QuizResult, User } = require("../models");
+const bcrypt = require("bcrypt");
 
 const defaultImage =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJdeTnZsjXpwZL9NNELSkDEv9mEpnxWbThXS_N21pOeAEfymWC2FZBidBOp1AawK2ZBUk&usqp=CAU";
@@ -7,12 +8,19 @@ const defaultImage =
 exports.addQuestion = async (req, res) => {
   const { questionImage, question, options, correctAnswer, hint } = req.body;
 
-  if (!question || !Array.isArray(options) || options.length < 2 || !correctAnswer) {
+  if (
+    !question ||
+    !Array.isArray(options) ||
+    options.length < 2 ||
+    !correctAnswer
+  ) {
     return res.status(400).json({ message: "Invalid question format" });
   }
 
   if (!options.includes(correctAnswer)) {
-    return res.status(400).json({ message: "Correct answer must be one of the options" });
+    return res
+      .status(400)
+      .json({ message: "Correct answer must be one of the options" });
   }
 
   const imageToUse = questionImage?.trim() || defaultImage;
@@ -25,7 +33,9 @@ exports.addQuestion = async (req, res) => {
     hint,
   });
 
-  res.status(201).json({ message: "Question added successfully", question: newQuestion });
+  res
+    .status(201)
+    .json({ message: "Question added successfully", question: newQuestion });
 };
 
 exports.updateQuestion = async (req, res) => {
@@ -58,19 +68,25 @@ exports.updateQuestion = async (req, res) => {
 
   if (options !== undefined) {
     if (!Array.isArray(options) || options.length < 2) {
-      return res.status(400).json({ message: "Options must be an array with at least 2 items" });
+      return res
+        .status(400)
+        .json({ message: "Options must be an array with at least 2 items" });
     }
     existingQuestion.options = options;
 
     if (correctAnswer !== undefined && !options.includes(correctAnswer)) {
-      return res.status(400).json({ message: "Correct answer must be one of the updated options" });
+      return res
+        .status(400)
+        .json({ message: "Correct answer must be one of the updated options" });
     }
   }
 
   if (correctAnswer !== undefined) {
     const validOptions = options || existingQuestion.options;
     if (!validOptions.includes(correctAnswer)) {
-      return res.status(400).json({ message: "Correct answer must be one of the options" });
+      return res
+        .status(400)
+        .json({ message: "Correct answer must be one of the options" });
     }
     existingQuestion.correctAnswer = correctAnswer;
   }
@@ -81,7 +97,10 @@ exports.updateQuestion = async (req, res) => {
 
   await existingQuestion.save();
 
-  res.status(200).json({ message: "Question updated successfully", question: existingQuestion });
+  res.status(200).json({
+    message: "Question updated successfully",
+    question: existingQuestion,
+  });
 };
 
 exports.deleteQuestion = async (req, res) => {
@@ -98,7 +117,14 @@ exports.deleteQuestion = async (req, res) => {
 
 exports.getAllQuestions = async (req, res) => {
   const questions = await Question.findAll({
-    attributes: ["id", "questionImage", "question", "options", "correctAnswer", "hint"],
+    attributes: [
+      "id",
+      "questionImage",
+      "question",
+      "options",
+      "correctAnswer",
+      "hint",
+    ],
   });
 
   res.status(200).json(questions);
@@ -138,10 +164,39 @@ exports.getAllQuizResults = async (req, res) => {
   });
 };
 
+exports.resetUserPassword = async (req, res) => {
+  const { username, newPassword } = req.body;
+
+  if (!username || !newPassword) {
+    return res
+      .status(400)
+      .json({ message: "Username and new password are required" });
+  }
+
+  if (newPassword.length < 6) {
+    return res
+      .status(400)
+      .json({ message: "Password must be at least 6 characters long" });
+  }
+
+  const user = await User.findOne({ where: { username } });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  user.password = hashedPassword;
+  await user.save();
+
+  res.status(200).json({
+    message: `Password for user '${username}' has been reset successfully.`,
+  });
+};
+
 exports.getAllUsers = async (req, res) => {
-   const user = await User.findAll({
-    attributes: ["id","name", "age", "username", "role"],
+  const user = await User.findAll({
+    attributes: ["id", "name", "age", "username", "role"],
   });
   if (!user) return res.status(404).json({ message: "No User Found" });
-   res.status(200).json(user);
+  res.status(200).json(user);
 };
