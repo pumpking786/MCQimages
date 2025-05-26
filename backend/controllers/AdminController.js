@@ -32,15 +32,15 @@ exports.updateQuestion = async (req, res) => {
   const questionId = req.params.id;
   const { questionImage, question, options, correctAnswer, hint } = req.body;
 
-  if (
-    questionImage === undefined &&
-    question === undefined &&
-    options === undefined &&
-    correctAnswer === undefined &&
-    hint === undefined
-  ) {
-    return res.status(400).json({ message: "At least one field is required to update" });
-  }
+  // if (
+  //   questionImage === undefined &&
+  //   question === undefined &&
+  //   options === undefined &&
+  //   correctAnswer === undefined &&
+  //   hint === undefined
+  // ) {
+  //   return res.status(400).json({ message: "At least one field is required to update" });
+  // }
 
   const existingQuestion = await Question.findByPk(questionId);
   if (!existingQuestion) {
