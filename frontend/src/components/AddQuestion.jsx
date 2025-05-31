@@ -144,7 +144,7 @@ const AddQuestion = ({ onQuestionAdded }) => {
         </div>
 
         <textarea
-          placeholder="Hint (optional)"
+          placeholder="Explanation (optional)"
           className="w-full border p-2 mb-2"
           value={formData.hint}
           onChange={(e) => handleChange("hint", e.target.value)}

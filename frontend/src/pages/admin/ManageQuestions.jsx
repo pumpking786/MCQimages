@@ -225,7 +225,7 @@ const ManageQuestions = () => {
                     onChange={(e) =>
                       setEditedData({ ...editedData, hint: e.target.value })
                     }
-                    placeholder="Hint (optional)"
+                    placeholder="Explanation (optional)"
                   />
                   {/* Save / Cancel Buttons */}
                   <div className="mt-3">
