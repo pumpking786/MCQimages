@@ -13,6 +13,9 @@ const Signup = () => {
 
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showCPassword, setShowCPassword] = useState(false);
+
   const navigate = useNavigate(); // Initialize useNavigate hook
 
   const handleChange = (e) => {
@@ -86,28 +89,42 @@ const Signup = () => {
               placeholder="Username"
             />
           </div>
-          <div className="mb-3">
+          <div className="mb-3 relative">
             <label className="block mb-1 font-medium">Password</label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 pr-10"
               placeholder="Password"
             />
+            <img
+              src={showPassword ? "/eye-closed.png" : "/eye-open.png"}
+              alt="Toggle Password Visibility"
+              className="w-5 h-5 absolute right-3 top-9 cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            />
           </div>
-          <div className="mb-4">
+
+          <div className="mb-4 relative">
             <label className="block mb-1 font-medium">Confirm</label>
             <input
-              type="password"
+              type={showCPassword ? "text" : "password"}
               name="cpassword"
               value={formData.cpassword}
               onChange={handleChange}
-              className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 pr-10"
               placeholder="Confirm"
             />
+            <img
+              src={showCPassword ? "/eye-closed.png" : "/eye-open.png"}
+              alt="Toggle Confirm Password Visibility"
+              className="w-5 h-5 absolute right-3 top-9 cursor-pointer"
+              onClick={() => setShowCPassword(!showCPassword)}
+            />
           </div>
+
           <button
             type="submit"
             className="w-full bg-green-600 text-white py-2 rounded-md cursor-pointer hover:bg-green-700 transition mb-4"
@@ -118,13 +135,13 @@ const Signup = () => {
         <div className="flex items-center justify-center text-sm space-x-1 mb-4">
           <span>Already have an account?</span>
           <Link to="/login">
-  <button
-    type="button"
-    className="text-green-600 hover:underline cursor-pointer "
-  >
-    Log in
-  </button>
-</Link>
+            <button
+              type="button"
+              className="text-green-600 hover:underline cursor-pointer "
+            >
+              Log in
+            </button>
+          </Link>
         </div>
         {message && (
           <p

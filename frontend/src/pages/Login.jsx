@@ -6,6 +6,7 @@ const Login = ({ setIsLoggedIn, setIsAdmin }) => {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -36,9 +37,12 @@ const Login = ({ setIsLoggedIn, setIsAdmin }) => {
       setIsLoggedIn(true);
 
       // Fetch role
-      const roleRes = await axios.get("http://localhost:8000/user/user-details", {
-        withCredentials: true,
-      });
+      const roleRes = await axios.get(
+        "http://localhost:8000/user/user-details",
+        {
+          withCredentials: true,
+        }
+      );
 
       const role = roleRes.data?.role;
       setIsAdmin(role === "admin");
@@ -79,15 +83,21 @@ const Login = ({ setIsLoggedIn, setIsAdmin }) => {
               placeholder="Your username"
             />
           </div>
-          <div className="mb-6">
+          <div className="mb-6 relative">
             <label className="block mb-1 font-medium">Password</label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
               placeholder="Your password"
+            />
+            <img
+              src={showPassword ? "/eye-closed.png" : "/eye-open.png"} // Use your actual paths
+              alt="Toggle visibility"
+              className="w-5 h-5 absolute right-3 top-9 cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
             />
           </div>
           <button
@@ -99,13 +109,13 @@ const Login = ({ setIsLoggedIn, setIsAdmin }) => {
           <div className="mt-4 flex justify-center items-center gap-2">
             <span className="text-sm text-gray-600">Create an account</span>
             <Link to="/signup">
-  <button
-    type="button"
-    className="px-4 py-1 text-blue-600 text-sm font-medium hover:underline transition cursor-pointer"
-  >
-    Sign Up
-  </button>
-</Link>
+              <button
+                type="button"
+                className="px-4 py-1 text-blue-600 text-sm font-medium hover:underline transition cursor-pointer"
+              >
+                Sign Up
+              </button>
+            </Link>
           </div>
         </form>
       </div>

@@ -51,6 +51,13 @@ exports.updateUserDetails = async (req, res) => {
       return res.status(409).json({ message: "Username already taken" });
     }
 
+    const isSameAsPassword = await bcrypt.compare(username, user.password);
+    if (isSameAsPassword) {
+      return res
+        .status(400)
+        .json({ message: "Username cannot be the same as your password" });
+    }
+
     user.username = username;
   }
 
@@ -94,7 +101,7 @@ exports.changePassword = async (req, res) => {
 
   const user = await User.findByPk(req.user.id);
   if (!user) return res.status(404).json({ message: "User not found" });
-if (newPassword === user.username) {
+  if (newPassword === user.username) {
     return res
       .status(400)
       .json({ message: "New password cannot be the same as the username" });

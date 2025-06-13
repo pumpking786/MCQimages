@@ -9,7 +9,7 @@ const ChangePassword = () => {
   });
 
   const [successMessage, setSuccessMessage] = useState("");
-//   const [error, setError] = useState(null);
+  //   const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,16 +34,19 @@ const ChangePassword = () => {
       setSuccessMessage(response.data.message);
       setFormData({ oldPassword: "", newPassword: "", confirmPassword: "" });
     } catch (err) {
-      const errorMessage = err.response?.data?.message || "Password change failed";
+      const errorMessage =
+        err.response?.data?.message || "Password change failed";
       alert(errorMessage); // Show alert for backend error
-    //   setError(errorMessage);
+      //   setError(errorMessage);
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-200">
       <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center text-blue-700 mb-6">Change Password</h2>
+        <h2 className="text-2xl font-bold text-center text-blue-700 mb-6">
+          Change Password
+        </h2>
 
         {successMessage && (
           <div className="text-green-600 text-center mb-4 font-medium">
@@ -96,7 +99,7 @@ const ChangePassword = () => {
 
           <button
             type="submit"
-            className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="cursor-pointer w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             Change Password
           </button>
