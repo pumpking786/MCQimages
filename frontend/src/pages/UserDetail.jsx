@@ -16,6 +16,9 @@ const UserDetail = () => {
   const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
+  const [sortBy, setSortBy] = useState("createdAt");
+  const [order, setOrder] = useState("desc");
+
   const pageSize = 5;
 
   // Fetch user details
@@ -41,23 +44,24 @@ const UserDetail = () => {
 
   // Fetch paginated quiz results
   useEffect(() => {
-    const fetchQuizResults = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8000/quizresult?page=${page}`,
-          {
-            withCredentials: true,
-          }
-        );
-        setQuizResults(response.data.results || []);
-        setHasNextPage(response.data.pagination.hasNextPage);
-        setTotalPages(Math.max(response.data.pagination.totalPages, 1));
-      } catch (err) {
-        setError(err.message);
-      }
-    };
-    fetchQuizResults();
-  }, [page]);
+  const fetchQuizResults = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/quizresult?page=${page}&sortBy=${sortBy}&order=${order}`,
+        {
+          withCredentials: true,
+        }
+      );
+      setQuizResults(response.data.results || []);
+      setHasNextPage(response.data.pagination.hasNextPage);
+      setTotalPages(Math.max(response.data.pagination.totalPages, 1));
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+  fetchQuizResults();
+}, [page, sortBy, order]); // 👈 include sortBy & order in dependency array
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -183,6 +187,36 @@ const UserDetail = () => {
           <h3 className="text-2xl font-bold text-center text-blue-700 mb-6">
             Performance Scores
           </h3>
+<div className="flex justify-end mb-4 space-x-4">
+  <div>
+    <label className="mr-2 text-gray-700 font-medium">Sort By:</label>
+    <select
+      value={sortBy}
+      onChange={(e) => {
+        setSortBy(e.target.value);
+        setPage(1); // reset to page 1
+      }}
+      className="px-2 py-1 border rounded"
+    >
+      <option value="createdAt">Date</option>
+      <option value="score">Score</option>
+    </select>
+  </div>
+  <div>
+    <label className="mr-2 text-gray-700 font-medium">Order:</label>
+    <select
+      value={order}
+      onChange={(e) => {
+        setOrder(e.target.value);
+        setPage(1); // reset to page 1
+      }}
+      className="px-2 py-1 border rounded"
+    >
+      <option value="desc">Descending</option>
+      <option value="asc">Ascending</option>
+    </select>
+  </div>
+</div>
 
           <table className="min-w-full table-auto">
             <thead>

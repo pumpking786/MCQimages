@@ -25,11 +25,15 @@ exports.getUserResults = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const offset = (page - 1) * limit;
 
+  const sortBy = req.query.sortBy === 'score' ? 'score' : 'createdAt';
+  const sortOrder = (req.query.order || 'desc').toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+
   try {
     const { count, rows: quizResults } = await QuizResult.findAndCountAll({
       where: { userId: req.user.id },
       limit,
       offset,
+      order: [[sortBy, sortOrder]],
     });
 
     const formattedResults = quizResults.map((result) => ({
