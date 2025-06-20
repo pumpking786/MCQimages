@@ -5,14 +5,17 @@ const QuizResultsAdmin = () => {
   const [results, setResults] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [sortBy, setSortBy] = useState("createdAt");
+const [order, setOrder] = useState("desc");
+
   const pageSize = 10;
-  const fetchResults = async (pageNum) => {
+  
+  useEffect(() => {
+  const fetchResults = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:8000/admin/quizresults?page=${pageNum}`,
-        {
-          withCredentials: true,
-        }
+        `http://localhost:8000/admin/quizresults?page=${page}&sortBy=${sortBy}&order=${order}`,
+        { withCredentials: true }
       );
       setResults(res.data.results);
       setTotalPages(res.data.totalPages);
@@ -22,13 +25,38 @@ const QuizResultsAdmin = () => {
     }
   };
 
-  useEffect(() => {
-    fetchResults(page);
-  }, [page]);
+  fetchResults();
+}, [page, sortBy, order]);
+
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Quiz Results</h1>
+      <div className="mb-4 flex items-center space-x-4">
+  <div>
+    <label className="mr-2 font-medium">Sort By:</label>
+    <select
+      value={sortBy}
+      onChange={(e) => setSortBy(e.target.value)}
+      className="border px-2 py-1 rounded"
+    >
+      <option value="createdAt">Time</option>
+      <option value="score">Score</option>
+    </select>
+  </div>
+  <div>
+    <label className="mr-2 font-medium">Order:</label>
+    <select
+      value={order}
+      onChange={(e) => setOrder(e.target.value)}
+      className="border px-2 py-1 rounded"
+    >
+      <option value="desc">Descending</option>
+      <option value="asc">Ascending</option>
+    </select>
+  </div>
+</div>
+
       <table className="w-full border table-auto">
         <thead>
           <tr className="bg-gray-100">
