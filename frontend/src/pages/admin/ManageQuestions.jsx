@@ -272,7 +272,9 @@ const ManageQuestions = () => {
 
                   {/* Hint Display */}
                   {q.hint && (
-                    <p className="mt-2 text-gray-600 italic">Hint: {q.hint}</p>
+                    <p className="mt-2 text-gray-600 italic">
+                      Explanation: {q.hint}
+                    </p>
                   )}
 
                   <div className="mt-2">
