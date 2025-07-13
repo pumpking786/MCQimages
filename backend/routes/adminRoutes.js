@@ -4,17 +4,20 @@ const router = express.Router();
 const authenticateJWT = require("../middleware/jwtauthentication");
 const isAdmin = require("../middleware/isAdmin");
 const AdminController = require("../controllers/AdminController");
+const { uploader } = require("../middleware/multerMiddleware");
 
 router.post(
   "/add-question",
   authenticateJWT,
   isAdmin,
+  uploader.single("image"),
   AdminController.addQuestion
 );
 router.put(
   "/quiz-question/:id",
   authenticateJWT,
   isAdmin,
+  uploader.single("image"),
   AdminController.updateQuestion
 );
 router.delete(

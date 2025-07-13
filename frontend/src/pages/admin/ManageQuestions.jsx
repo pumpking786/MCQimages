@@ -10,11 +10,12 @@ const ManageQuestions = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editedData, setEditedData] = useState({
     question: "",
-    questionImage: "",
+    questionImage: null, // Changed to null to hold File object or existing URL
     options: [],
     correctAnswer: "",
     hint: "",
   });
+  const [previewImage, setPreviewImage] = useState(""); // New state for image preview
 
   const fetchQuestions = async () => {
     try {
@@ -48,22 +49,26 @@ const ManageQuestions = () => {
     setEditingId(q.id);
     setEditedData({
       question: q.question,
-      questionImage: q.questionImage || "",
+      questionImage: q.questionImage || null, // Keep existing URL or null
       options: [...q.options],
       correctAnswer: q.correctAnswer,
       hint: q.hint || "",
     });
+    setPreviewImage(
+      q.questionImage ? `http://localhost:8000${q.questionImage}` : ""
+    ); // Set initial preview
   };
 
   const cancelEditing = () => {
     setEditingId(null);
     setEditedData({
       question: "",
-      questionImage: "",
+      questionImage: null,
       options: [],
       correctAnswer: "",
       hint: "",
     });
+    setPreviewImage("");
   };
 
   const saveEdit = async (id) => {
@@ -91,11 +96,28 @@ const ManageQuestions = () => {
       return;
     }
 
+    const formData = new FormData();
+    formData.append("question", editedData.question.trim());
+    formData.append(
+      "options",
+      JSON.stringify(editedData.options.map((opt) => opt.trim()))
+    ); // Send as JSON string
+    formData.append("correctAnswer", editedData.correctAnswer);
+    formData.append("hint", editedData.hint.trim());
+    if (editedData.questionImage instanceof File) {
+      formData.append("image", editedData.questionImage); // Upload new file
+    } else if (editedData.questionImage) {
+      formData.append("questionImage", editedData.questionImage); // Keep existing URL if no new file
+    }
+
     try {
       const res = await axios.put(
         `http://localhost:8000/admin/quiz-question/${id}`,
-        editedData,
-        { withCredentials: true }
+        formData,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        }
       );
 
       setQuestions((prev) =>
@@ -104,7 +126,11 @@ const ManageQuestions = () => {
 
       cancelEditing();
     } catch (err) {
-      setError("Failed to update the question.");
+      setError(
+        `Failed to update the question. ${
+          err.response?.data?.message || err.message
+        }`
+      );
       console.error("Error updating question:", err.response?.data || err);
     }
   };
@@ -122,6 +148,14 @@ const ManageQuestions = () => {
   const removeOption = (index) => {
     const newOptions = editedData.options.filter((_, i) => i !== index);
     setEditedData({ ...editedData, options: newOptions });
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setEditedData({ ...editedData, questionImage: file });
+      setPreviewImage(URL.createObjectURL(file)); // Preview the selected file
+    }
   };
 
   useEffect(() => {
@@ -163,26 +197,23 @@ const ManageQuestions = () => {
                     placeholder="Question text"
                   />
 
-                  {/* Image Preview & URL Input */}
-                  {editedData.questionImage && (
+                  {/* Image Preview & Upload Button */}
+                  {previewImage && (
                     <img
-                      src={editedData.questionImage}
+                      src={previewImage}
                       alt="Preview"
                       className="h-40 w-auto max-h-40 object-contain mb-2"
                     />
                   )}
-                  <input
-                    type="text"
-                    className="w-full border p-2 mb-2"
-                    value={editedData.questionImage}
-                    onChange={(e) =>
-                      setEditedData({
-                        ...editedData,
-                        questionImage: e.target.value,
-                      })
-                    }
-                    placeholder="Image URL"
-                  />
+                  <label className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded mb-2 inline-block">
+                    Upload File
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                  </label>
 
                   {/* Options Editor */}
                   {editedData.options.map((opt, idx) => (
@@ -249,7 +280,7 @@ const ManageQuestions = () => {
 
                   {q.questionImage && (
                     <img
-                      src={q.questionImage}
+                      src={`http://localhost:8000${q.questionImage}`} // Full URL
                       alt="Question"
                       className="h-40 w-auto max-h-40 object-contain mb-2 rounded"
                     />

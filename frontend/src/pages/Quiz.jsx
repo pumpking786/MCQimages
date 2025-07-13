@@ -91,11 +91,15 @@ const Quiz = () => {
                 </p>
               </div>
               <div className="flex justify-center items-center w-full">
-                <img
-                  src={currentQuestion.questionImage}
-                  alt="Quiz"
-                  className="max-h-96 w-full object-contain"
-                />
+                {currentQuestion.questionImage ? (
+                  <img
+                    src={`http://localhost:8000${currentQuestion.questionImage}`} // Full URL
+                    alt="Quiz"
+                    className="max-h-96 w-full object-contain"
+                  />
+                ) : (
+                  <p className="text-gray-400">No image available</p>
+                )}
               </div>
             </div>
 

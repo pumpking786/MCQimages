@@ -25,10 +25,13 @@ function App() {
       if (res.data.loggedIn) {
         setIsLoggedIn(true);
         // Fetch user details to determine role
-        const userDetailsRes = await axios.get("http://localhost:8000/user/user-details", {
-          withCredentials: true,
-        });
-        if (userDetailsRes.data.role === 'admin') {
+        const userDetailsRes = await axios.get(
+          "http://localhost:8000/user/user-details",
+          {
+            withCredentials: true,
+          }
+        );
+        if (userDetailsRes.data.role === "admin") {
           setIsAdmin(true);
         }
       } else {
@@ -62,7 +65,11 @@ function App() {
 
   return (
     <>
-      <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} isAdmin={isAdmin} />
+      <Header
+        isLoggedIn={isLoggedIn}
+        setIsLoggedIn={setIsLoggedIn}
+        isAdmin={isAdmin}
+      />
       <Routes>
         <Route
           path="/"
@@ -70,22 +77,26 @@ function App() {
         />
         <Route
           path="/profile"
-          element={isLoggedIn ? <UserDetail /> : <Navigate to="/login" replace />}
+          element={
+            isLoggedIn ? <UserDetail /> : <Navigate to="/login" replace />
+          }
         />
         <Route
           path="/change-password"
-          element={isLoggedIn ? <ChangePassword /> : <Navigate to="/login" replace />}
+          element={
+            isLoggedIn ? <ChangePassword /> : <Navigate to="/login" replace />
+          }
         />
         <Route
-  path="/login"
-  element={
-    isLoggedIn ? (
-      <Navigate to="/" replace />
-    ) : (
-      <Login setIsLoggedIn={setIsLoggedIn} setIsAdmin={setIsAdmin} />
-    )
-  }
-/>
+          path="/login"
+          element={
+            isLoggedIn ? (
+              <Navigate to="/" replace />
+            ) : (
+              <Login setIsLoggedIn={setIsLoggedIn} setIsAdmin={setIsAdmin} />
+            )
+          }
+        />
 
         <Route
           path="/signup"

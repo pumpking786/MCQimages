@@ -1,17 +1,17 @@
-require('dotenv').config();
+require("dotenv").config();
 const express = require("express");
 const http = require("http");
-
+const path = require("path");
 const app = express();
 const server = http.createServer(app);
-
+app.use("/upload", express.static(path.join(__dirname, "upload")));
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const resultRoutes = require("./routes/resultRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const sessionMiddleware = require("./middleware/session");
-const corsMiddleware=require("./middleware/cors")
-const errorHandler = require('./middleware/errorHandling');
+const corsMiddleware = require("./middleware/cors");
+const errorHandler = require("./middleware/errorHandling");
 
 app.use(corsMiddleware);
 // ✅ Parse incoming JSON
