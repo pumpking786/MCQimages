@@ -9,6 +9,7 @@ const Signup = () => {
     username: "",
     password: "",
     cpassword: "",
+    email: "",
   });
 
   const [message, setMessage] = useState("");
@@ -39,6 +40,7 @@ const Signup = () => {
         username: "",
         password: "",
         cpassword: "",
+        email: "",
       });
 
       // Redirect to /login after a 2-second delay
@@ -122,6 +124,17 @@ const Signup = () => {
               alt="Toggle Confirm Password Visibility"
               className="w-5 h-5 absolute right-3 top-9 cursor-pointer"
               onClick={() => setShowCPassword(!showCPassword)}
+            />
+          </div>
+          <div className="mb-3">
+            <label className="block mb-1 font-medium">Email</label>
+            <input
+              type="text"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="Enter your email to get otp"
             />
           </div>
 

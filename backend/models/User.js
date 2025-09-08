@@ -6,6 +6,11 @@ module.exports = (sequelize) => {
   const User = sequelize.define(
     "User",
     {
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
       name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -23,10 +28,10 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      role:{
-        type:DataTypes.ENUM("user","admin"),
-        defaultValue:"user",
-        allowNull:false,
+      role: {
+        type: DataTypes.ENUM("user", "admin"),
+        defaultValue: "user",
+        allowNull: false,
       },
     },
     {

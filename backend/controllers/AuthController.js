@@ -1,4 +1,5 @@
 // controllers/AuthController.js
+const validator = require("validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
@@ -6,34 +7,47 @@ const { User } = require("../models");
 const SECRET_KEY = process.env.SECRET_KEY;
 
 exports.signup = async (req, res) => {
-  const { name, age, username, password, cpassword } = req.body;
+  const { name, age, username, password, cpassword, email } = req.body;
 
-  if (!name || !age || !username || !password || !cpassword) {
+  if (!name || !age || !username || !password || !cpassword || !email) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
   if (isNaN(age) || Number(age) <= 0) {
-    return res.status(400).json({ message: "Age must be a valid positive number" });
+    return res
+      .status(400)
+      .json({ message: "Age must be a valid positive number" });
+  }
+  if (!validator.isEmail(email)) {
+    return res.status(400).json({ message: "Invalid email format" });
   }
 
   if (password.length < 6) {
-    return res.status(400).json({ message: "Password must be at least 6 characters long" });
+    return res
+      .status(400)
+      .json({ message: "Password must be at least 6 characters long" });
   }
 
   if (password !== cpassword) {
     return res.status(400).json({ message: "Passwords do not match" });
   }
-
   const existingUser = await User.findOne({ where: { username } });
   if (existingUser) {
     return res.status(409).json({ message: "Username already taken" });
   }
- if(username===password){
-    return res.status(400).json({message:"username and password can't be a same"})
+  const existingEmail = await User.findOne({ where: { email } });
+  if (existingEmail) {
+    return res.status(409).json({ message: "Email already registered" });
+  }
+  if (username === password) {
+    return res
+      .status(400)
+      .json({ message: "username and password can't be a same" });
   }
   const hashedPassword = await bcrypt.hash(password, 10);
 
   await User.create({
+    email,
     name,
     age,
     username,
@@ -48,7 +62,9 @@ exports.login = async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).json({ message: "Username and password are required" });
+    return res
+      .status(400)
+      .json({ message: "Username and password are required" });
   }
 
   const user = await User.findOne({ where: { username } });
